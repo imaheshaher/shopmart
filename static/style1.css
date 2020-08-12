@@ -1,0 +1,66 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.header {
+  height: 100vh;
+}
+
+.navbar-style {
+  box-shadow: 0 5px 10px #efefef;
+  background: #555;
+  text-transform: uppercase;
+}
+.logo{
+  margin-top: 12px;
+  height: 10px;
+  margin-right: 20px;
+  margin-left: 0px;
+  
+  padding:0px; 0px;
+  color: darkorange;
+}
+.icon-bar {
+  background: darkorange;
+}
+
+li a{
+  color: #fff;
+  font-size: 20px;
+}
+
+.big-text{
+  font-size: 30px;
+  
+  color: darkorange;
+}
+a.btn-first {
+  background-color: darkorange;
+  color: white;
+}
+
+a.btn-second {
+  background-color: transparent ;
+  border: 1px solid darkorange;
+  color: #333;
+  
+}
+a.btn:hover{
+  background: darkorange;
+  border: none;
+  color:#fff;
+  box-shadow: 5px 5px 10px #999;
+  transition: 0.3s;
+}
+.banner-info,.banner-img{
+  margin: 30px 0px;
+}
+a.head-name{
+  
+  font-size: 20px;
+  
+  color: #fff;
+}
+.space{
+  
+}

@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
+  <title>shope</title>
+  
+  
+  
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
+  
+    <style>
+    .open-close {
+      text-align: right;
+      height: 30px;
+      width: 60px;
+      
+      text-align: center;
+      color: white;
+      
+      background-color: green;
+    }
+      hr.new5 {
+  border: 10px solid green;
+  border-radius: 5px;
+}
+
+hr.new4 {
+  border: 1px solid red;
+  border-radius: 5px;
+}
+
+
+    </style>
+    <style>
+    body, html {
+  height: 100%;
+}
+.bg {
+  /* The image used */
+  background-image: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img(20).jpg");
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.jumbotron-billboard .img {
+    margin-bottom: 0px;
+    opacity: 0.2;
+    color: #fff;
+    background: #000 url("static/images/bg-01.jpg") top center no-repeat;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    overflow: hidden;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:1;
+}
+.jumbotron h2 {margin-top:0;}
+.jumbotron {
+  position:relative;
+  padding-top:50px;
+  padding-bottom:50px;
+}
+.jumbotron .container {
+  position:relative;
+  z-index:2;
+}
+
+@media screen and (max-width: 768px) {
+  .jumbotron {
+    padding-top:20px;
+    padding-bottom:20px;
+  }
+}
+</style>
+  </head>
+  <body >
+    <div>
+      <br>
+    </div>
+    <div class="container">
+    <div class="jumbotron jumbotron-billboard">
+      
+{% if request.user.is_authenticated %}
+<ul style="text-align:right">
+  {% for s in shop %}
+  <p class="navbar-brand">  user: <a href="{{s.get_absolute_url}}">{{request.user.first_name}}</a></p>
+  {% endfor %}
+<a class="navbar-brand" href="{% url 'mart:logout' %}">logout</a>
+
+</ul>
+{% else %}
+
+<ul style="text-align:right">
+<a class="navbar-brand" href="{% url 'mart:home1' %}">login</a>
+<a class="navbar-brand" href="{% url 'mart:s_register' %}">signup</a></ul>
+
+{% endif %}
+</div>
+
+ <div class="jumbotron jumbotron-billboard">
+   
+<div class="container">
+  
+      <p style="text-align:right">
+      <a href="searchfilter">Filtre</a>
+      
+      </p>
+  <table class="table">
+    
+  <div class="form-group">
+    <form action="{% url 'mart:search' %}" method="get" id="shop" data-cities-url="{% url 'mart:ajax_load_cities' %}">
+    
+    
+      {% csrf_token %}
+      
+    
+      district :{% render_field cityfilter.form.district class+="form-control"  %}
+      
+      City :{% render_field cityfilter.form.city class+="form-control" placeholder="category" %}
+      category :{% render_field cityfilter.form.category class+="form-control"  %}
+      Shop Name:{% render_field cityfilter.form.shop_name__icontains class+="form-control" placeholder="search shop" %}
+      
+      <!--
+      City :<select class=" form-control" id="cityid" name="city">
+        <option >select city</option>
+      {% for i in  tel %}
+      
+      <option value="{{i.id}}">{{i.taluka}}</option>
+      {% endfor %}
+      </select>
+      
+      -->
+      </table>
+      <input class="btn btn-outline-success btn-sm"type="submit" value="search">
+      </p>
+      
+    {% if queryset %}
+    Total Shop Found: {{queryset.count}}
+    {% else %}
+    No Shop found
+    {% endif %}
+      </div>
+      
+      </form>
+      
+      </div>
+    </div>
+
+    
+    {% for shop in queryset  %}
+    <div class="container">
+
+    
+ <div class="jumbotron jumbotron-billboard">
+  
+    <div class="row" >
+      
+  <div class="column" >
+    
+    <div class="thumbnail">
+      <a href="{{shop.get_absolute_url}}">
+        {% if shop.image %}
+        <img src="{{ shop.image.url }}" height="150" width="120" alt="..."></a>
+        {% endif %}
+      <div>
+      <br>    
+  <p><a href="{{shop.get_absolute_url}}" class="btn btn-info" role="button">
+        visit
+        
+      </a>
+      
+      <a  class="btn btn-primary" href="tel:{{shop.user.mob_no}}" role="button">call</a>
+      
+      </div>
+      </div>
+      </div>
+      <div class="col sm-3 ">
+      <div class="caption">
+        
+        {% if shop.status %}
+            
+            <h6 class="p-2 bg-success text-white float-right" >open</h6>
+            {% else %}
+            <h6 class="p-2 bg-danger text-white float-right" >  closed</h6>
+            {% endif %}  
+            <br>
+        <h6>shop name:{{ shop.shop_name }}</h6>
+        <h6>Category:{{ shop.category }}</h6>
+        
+        
+        
+        <h6>district:{{shop.district}}</h6>
+            <h6>city- {{ shop.city }}</h6>
+            <h6>address- {{ shop.address }}</h6>
+            <p>description: <u>{{ shop.description| slice:":50" }}<a href="{{shop.get_absolute_url}}"> .....</a></u></p>
+            
+        </div>
+        
+
+      </div>
+      </div>
+    </div>
+ 
+ <hr>
+   
+  </div>
+ 
+</div>
+</div>
+</div>
+{% endfor %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+  $("#id_district").change(function(){
+    var url=$("#shop").attr("data-cities-url");
+    var distId=$(this).val();
+    $.ajax({
+      url: url,
+      data :{
+        'district':distId
+      },
+      success:function(data) {
+        $("#id_city").html(data);
+      }
+    });
+  });
+</script>
+
+<script>
+  $("#id_not_district").change(function(){
+    
+    $("#shop").submit();
+  });
+</script>
+<script>
+  $("#id_city").change(function(){
+    
+    $("#shop").submit();
+  });
+</script>
+<script>
+  $("#id_category").change(function(){
+    
+    $("#shop").submit();
+  });
+</script>
+
+<!--     
+Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+  </body>
+</html>
+  {% endblock %}

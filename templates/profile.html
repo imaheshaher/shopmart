@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Personify Personal/VCard Website Template</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|Playfair+Display:,300, 400, 700" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
+
+  
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+      form {
+        border:2px solid #660;
+        padding: 15px;
+        
+        display: none;
+      }
+      .jumbotron {
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    {% if request.user.is_authenticated %}
+    <div class="jumbotron jumbotron-billboard">
+    {% for s in shop %}
+    <p style="text-align:right">User: <a href="{{s.get_absolute_url}}">{{request.user.first_name}}</a>
+  
+<a href="{% url 'mart:logout' %}">logout</a>
+</p>
+
+{% endfor %}
+</div>
+{% endif %}
+
+    <div class="jumbotron jumbotron-billboard">
+    {{shop.user}}
+    {% for s in shop %}
+    
+    <div class="container">
+    <marquee><b><font color="red">Welcome to  {{s.shop_name}}</font></b></marquee>
+    <div class="site-wrap">
+
+      <a href="#" class="offcanvas-toggle js-offcanvas-toggle"></a>
+      
+      <div class="row">
+        
+        <div class="column">
+          {% if s.image %}
+        
+            
+      <img src="{{ s.image.url }}" height="150" width="120">
+      {% endif %}
+      </div>
+      <div class="col sm-3">
+        
+        <h6>shop name : <u>{{s.shop_name}}</u></h6>
+        <h6 style="text-align:right">
+          
+        </h6>
+        
+        <h6>owner name: <u>{{ s.user.user.first_name }} {{ s.user.user.last_name }}</u></h6>
+        <h6>category: <u>{{s.category}}</u></h6>
+        
+        <h6>at place : <u> {{s.address}} ,{{ s.city }} </u></h6>
+        </div>
+        </div>
+        <div>
+          </div>
+          </div>
+        <hr>
+        <div class="jumbotron-billboard">
+        {% if request.user == s.user.user %}
+          
+          {% if s.status %}
+          
+            <a class="btn btn-success btn-sm" href="{% url 'mart:updateform' %}">shop is open</a>
+          {% else %}
+            <a class="btn btn-danger btn-sm" href="{% url 'mart:updateform'  %}">shop is closed</a>
+          {% endif %}
+                <a class="btn btn-primary btn-sm float-right" href="{{s.get_update_url}}">update profile</a>
+        {% else %}
+          {% if s.status %}
+            <h6 class="btn btn-success btn-sm">  shop : open</h6>
+          {% else %}
+            <h6 class="btn btn-danger btn-sm">shop : closed</h6>
+          {% endif %}
+          <a class="btn btn-primary btn-sm float-right" href="tel:{{s.user.mob_no}}"> call now</a>
+        {% endif %}
+          <hr>
+          
+        </div>
+        
+      </div>
+      
+      </div>
+      <div class="jumbotron jumbotron-billboard">
+      <div>
+        <b>Today Special:</b>
+        <u class="text-primary"><b>{{s.todays_special}}</b></u>
+        
+      </div>
+      <hr>
+      <div>
+      <b>Description:</b> {{s.description}} 
+      </div>
+      </div>
+      
+      <main>
+        
+        <hr>
+        {% if request.user == s.user.user %}
+        <div class="jumbotron jumbotron-billboard">
+        <div>
+        <h5>If you have any product Add Product here</h5> 
+        
+        <button type="button" id="pbutton" >Add Product</button>
+        <form enctype="multipart/form-data" id="product-form" method="post" action="add-product">
+          {% csrf_token %}
+          {{product_form.as_p}}
+          <input type="submit" value="upload">
+        </form>
+        </div>
+        <div>
+        <h5>If you are giving any service then you can describe it..</h5>
+        <button type="button" id="sbutton">Add service</button>
+        <form enctype="multipart/form-data" id="service-form" method="post" action="add-service">
+          {% csrf_token %}
+          {{service_form.as_p}}
+          <input type="submit" value="upload">
+        </form>
+        </div>
+        </div>
+        
+        {% endif %}
+        
+          {% for s in seller_product %}
+        
+            
+          <div class="jumbotron jumbotron-billboard">
+        <div class="row">
+            
+          <div class="column">
+          
+        
+          
+          {% if s.product_image %}
+          <img src="{{s.product_image.url}}" height="100" width="100">
+          {% endif %}
+          
+          </div>
+          <div class="col sm-3">
+            
+          <h6 >
+          Product Name: {{s.product_name}}
+          </h6>
+          <h6 >
+          Price : {{s.product_price}} Rs.
+          </h6>
+        <h6>
+          Brand : {{s.product_brand}}
+        </h6>
+          </div>
+        </div>
+        </div>
+        
+        
+        {% endfor %}
+        
+        
+          {% for s in seller_service %}
+        
+            
+          <div class="jumbotron jumbotron-billboard">
+        <div class="row">
+            
+          <div class="column">
+          
+        
+          
+          {% if s.service_image %}
+          <img src="{{s.service_image.url}}" height="100" width="100">
+          {% endif %}
+          
+          </div>
+          <div class="col sm-3">
+            
+          <h6 >
+          Product Name: {{s.service_name}}
+          </h6>
+          
+        <h6>
+          Describe Service : {{s.service_describe}}
+        </h6>
+          </div>
+        </div>
+        </div>
+        
+        
+        {% endfor %}
+        
+        
+{% endfor %}
+<script>
+  $(document).ready(function(){
+    $("#pbutton").click(function(){
+      
+      $("#product-form").toggle();
+    });
+    
+    $("#sbutton").click(function(){
+      $("#service-form").toggle();
+    });
+    
+  });
+</script>
+
+<!--
+        <p>
+          <a href="#" class="mr-2 mb-2">Twitter</a>
+          <a href="#" class="mr-2 mb-2">Facebook</a>
+          <a href="#" class="mr-2 mb-2">Instagram</a> 
+       </p>
+         <h2 class="mb-4 mt-5">Services</h2>
+        <div class="row">
+          <div class="col-md-6 col-lg-6 mb-4">
+            <div class="media custom-media  d-block">
+              <div class="icon mr-3"><span class="ion-android-cart"></span></div>
+              <div class="media-body">
+                <h3 class="mt-0"><a href="#">eCommerce Websites</a></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed obcaecati totam.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-6 mb-4">
+            <div class="media custom-media  d-block">
+              <div class="icon mr-3"><span class="ion-bonfire"></span></div>
+              <div class="media-body">
+                <h3 class="mt-0"><a href="#">Branding Identity </a></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed obcaecati, totam.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-6 mb-4">
+            <div class="media custom-media  d-block">
+              <div class="icon mr-3"><span class="ion-videocamera"></span></div>
+              <div class="media-body">
+                <h3 class="mt-0"><a href="#">Video Editing</a></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed obcaecati totam.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-lg-6 mb-4">
+            <div class="media custom-media  d-block">
+              <div class="icon mr-3"><span class="ion-cube"></span></div>
+              <div class="media-body">
+                <h3 class="mt-0"><a href="#">Web Applications </a></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed obcaecati, totam.</p>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        
+      </main>
+    </div>
+
+    <!-- loader -->
+    <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>
+
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+  </body>
+</html>
+{% endblock %}

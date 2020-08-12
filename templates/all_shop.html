@@ -1,0 +1,146 @@
+{% load widget_tweaks %}
+<html lang="en">
+<head>
+    
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
+</head>
+<body>
+  <div class="container">
+  <div class="head">
+  <h1>आपले दुकाने</h1>
+  
+  <br>
+  <table class="table">
+    <div class="form-group">
+    <form method="get" action="all_shop" id="shopform" data-cities-url="{% url 'mart:ajax_load_cities' %}" >
+      {% csrf_token %}
+      
+    
+    
+      district :{% render_field form.form.district class+="form-control chosen"  %}
+      
+      City :{% render_field form.form.city class+="form-control chosen" placeholder="category" %}
+      category :{% render_field form.form.category class+="form-control chosen"  %}
+    </div>  
+      <input class="btn btn-success"type="submit" value="search">
+      </table>
+      </form>
+  <br>
+  <p class="font-weight-bold">Type something in the input field to search the table for shop name or city or address </p>  
+
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
+  
+
+
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>No</th>
+        <th>Name </th>
+        <th>category</th>
+        <th>Mobile no</th>
+        <th>Status</th>
+        <th class="col">Address</th>
+        <th>City</th>
+        
+        
+      </tr>
+    </thead>
+  
+    <tbody id="myTable">
+      {% for s in shop %}
+    <tr class="font-weight-bold" >
+      
+        <td>{{forloop.counter}}</td>
+        <td >
+          <a href="{{s.get_absolute_url}}">
+            {{s.shop_name}} </a>        
+          </td>
+          <td>{{s.category}}</td>
+        <td><a href="tel:{{s.user.mob_no}}">{{s.user.mob_no}}</a></td>
+        {% if s.status %}
+        <td class="text-success">open</td>
+        {% else %}
+        <td class="text-danger">close</td>
+        {% endif %}
+        
+        <td>{{s.address | slice:":20"}}..</td>
+        <td>{{s.city}}</td>
+        
+        
+      </tr>
+      </a>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <script>
+    
+  $("#id_district").change(function(){
+    var url = $("#shopform").attr("data-cities-url");
+    var distId=$(this).val();
+    
+    $.ajax({
+      
+      url: url,
+      
+      data: {
+        'district':distId
+      },
+      success: function(data) {
+        
+        $("#id_city").html(data);
+      }
+    });
+  });
+  </script>
+  
+  <script>
+    $("#id_city").change(function() {
+      $("#shopform").submit();
+    });
+    $("#id_district").change(function(){
+      $("#shopform");
+      
+    });
+  </script>
+  <script>
+  $("#id_category").change(function(){
+    
+    $("#shopform").submit();
+  });
+  </script>
+
+  <script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+      <script type="text/javascript">
+        $(".chosen").chosen();
+      </script>
+<script>
+  
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+</script>
+</body>
+</html>

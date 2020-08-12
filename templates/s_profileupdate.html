@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<html>
+  <head>
+    	<meta name="viewport" content="width=device-width, initial-scale=1">  
+    
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>
+      
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    </title>
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <style>
+    
+      .acontainer { 
+  margin:20px;
+  
+  border: 3px solid #3333; 
+}
+  </style>
+  </head>
+  <body>
+    
+      
+    {% if request.user.is_authenticated %}
+      
+    <hr color="green" size="2px">
+  <div class="container">
+    <form enctype="multipart/form-data" id="shopform" action="" method="POST" data-cities-url="{% url 'mart:ajax_load_cities' %}"  >
+      {% csrf_token %}
+      
+      <h2>Register Or Update here Your shop detail </h2>
+      <hr color="black" size="3px">
+      <table >
+      <p class="bold">
+      {{ form.as_table }}
+      
+      </p>  
+      </table>
+      <input type="submit" value="submit">
+    </form>
+    </div>
+    {% else %}
+    <a href="{% url 'mart:home1' %}">login</a>
+    {% endif %}
+    
+    
+   <script>
+      
+  $("#id_district").change(function(){
+    var url = $("#shopform").attr("data-cities-url");
+    var distId=$(this).val();
+    
+    
+    $.ajax({
+      
+      url: url,
+      
+      data: {
+        'district':distId
+      },
+      success: function(data) {
+      
+        $("#id_city").html(data);
+      }
+    });
+  });
+</script> 
+
+  </body>
+  
+  </html>
+  {% endblock %}
