@@ -134,7 +134,7 @@ def s_register(request):
       userform.save()
       sellerform=form1.save(commit=False)
       sellerform.user=userform
-      sellerform.mob_no=uname
+      sellerform.mob_no=int(uname)
       sellerform.save()
       
       return redirect('mart:home1')
@@ -303,14 +303,23 @@ class createshop(CreateView):
   template_name='s_profileupdate.html'
   success_url="/sellerdetail"
 
+  def get_shop(self,**kwargs):
+    print('data get')
   def get_context_data(self,**kwargs):
+    
     context = super().get_context_data(**kwargs)
     
     return context
     
   def form_valid(self,form):
     form.instance.user=get_user(self.request.user)
-    form.save()
+    selid=Seller.objects.get(user_id=self.request.user.id)
+    try:
+      shop=ShopDetail.objects.get(user_id=selid.id)
+      return redirect("mart:shopupdate",selid.id)
+    except:
+      
+      form.save()
     return redirect("mart:profiledetail",form.instance.pk)
     '''
   def form_valid(self,form):
