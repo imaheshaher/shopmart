@@ -133,8 +133,14 @@ class Seller_Product(models.Model):
   def __str__(self):
     return str(self.seller_id)
     
-  def get_product_url(self):
-    return self.pk
+  def get_product_update_url(self):
+    return reverse("mart:product_update", kwargs = {
+      'pk':self.pk
+    })
+  def get_product_delete_url(self):
+    return reverse("mart:product_delete",kwargs = {
+      'pk':self.pk
+    })
 
   
 class Seller_Service(models.Model):
@@ -142,7 +148,7 @@ class Seller_Service(models.Model):
   seller_id=models.ForeignKey(Seller,on_delete=models.CASCADE)
   service_image=models.ImageField(blank=True)
   service_name=models.CharField(max_length=50,blank=True)
-  service_describe=models.CharField(max_length=100,blank=True)
+  service_describe=models.TextField(max_length=100,blank=True)
   
   def __str__(self):
     return str(self.seller_id)
@@ -150,3 +156,12 @@ class Seller_Service(models.Model):
   def get_service_url(self):
     return self.pk
     
+  
+  def get_service_update_url(self):
+    return reverse("mart:product_update", kwargs = {
+      'pk':self.pk
+    })
+  def get_service_delete_url(self):
+    return reverse("mart:product_delete",kwargs = {
+      'pk':self.pk
+    })

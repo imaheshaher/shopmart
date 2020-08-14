@@ -376,7 +376,7 @@ class All_shop(ListView):
     return context
     
 @login_required
-def updateform(request):
+def updateform(request): #update shop status
   sid=get_object_or_404(Seller,user_id=request.user.id)
   obj=get_object_or_404(ShopDetail,user_id=sid.id)
   
@@ -457,3 +457,75 @@ def add_service(request):
     form=Seller_Service_Form()
     
   return redirect("mart:profiledetail",shopid.id)
+  
+  
+@login_required
+def product_update(request,pk):
+  context={}
+  selid=Seller.objects.get(user_id=request.user.id)
+  obj=get_object_or_404(Seller_Product,id=pk)
+  if obj.seller_id_id!=selid.id:
+    return redirect("mart:profiledetail",selid.id)
+  
+  
+  form=Seller_Product_Form(request.POST or None,instance=obj)
+  context['form']=form
+  if request.method=='POST':
+    img=request.FILES.get('product_image')
+    if form.is_valid():
+      f=form.save(commit=False)
+      if img:
+        f.product_image=img
+      f.save()
+      return redirect('mart:profiledetail',selid.id)
+    else:
+      return HttpResponse("forn nt valid")
+  else:
+    form=Seller_Product_Form(request.POST)
+  return render(request,'p_s_update.html',context)
+@login_required
+def delete_product(request,pk):
+  selid=Seller.objects.get(user_id=request.user.id)
+  obj=get_object_or_404(Seller_Product,id=pk)
+  if selid.id!=obj.seller_id_id:
+    return redirect("mart:profiledetail",selid.id)
+  
+  obj.delete()
+  return redirect("mart:profiledetail",selid.id)
+    
+
+@login_required
+def service_update(request,pk):
+  context={}
+  selid=Seller.objects.get(user_id=request.user.id)
+  obj=get_object_or_404(Seller_Service,id=pk)
+  if obj.seller_id_id!=selid.id:
+    return redirect("mart:profiledetail",selid.id)
+  
+  
+  form=Seller_Service_Form(request.POST or None,instance=obj)
+  context['form']=form
+  if request.method=='POST':
+    img=request.FILES.get('product_image')
+    if form.is_valid():
+      f=form.save(commit=False)
+      if img:
+        f.service_image=img
+      f.save()
+      return redirect('mart:profiledetail',selid.id)
+    else:
+      return HttpResponse("forn nt valid")
+  else:
+    form=Seller_Service_Form(request.POST)
+  return render(request,'p_s_update.html',context)
+@login_required
+def delete_service(request,pk):
+  selid=Seller.objects.get(user_id=request.user.id)
+  obj=get_object_or_404(Seller_Service,id=pk)
+  if selid.id!=obj.seller_id_id:
+    return redirect("mart:profiledetail",selid.id)
+  
+  obj.delete()
+  return redirect("mart:profiledetail",selid.id)
+    
+  

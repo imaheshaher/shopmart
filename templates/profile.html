@@ -145,8 +145,8 @@
         </div>
         
         {% endif %}
-        
-          {% for s in seller_product %}
+          <center><h4>Products</h4></center>
+          {% for sp in seller_product %}
         
             
           <div class="jumbotron jumbotron-billboard">
@@ -156,31 +156,37 @@
           
         
           
-          {% if s.product_image %}
-          <img src="{{s.product_image.url}}" height="100" width="100">
+          {% if sp.product_image %}
+          <img src="{{sp.product_image.url}}" height="100" width="100">
+          
           {% endif %}
           
           </div>
           <div class="col sm-3">
             
           <h6 >
-          Product Name: {{s.product_name}}
+          Product Name: {{sp.product_name}}
           </h6>
           <h6 >
-          Price : {{s.product_price}} Rs.
+          Price : {{sp.product_price}} Rs.
           </h6>
         <h6>
-          Brand : {{s.product_brand}}
+          Brand : {{sp.product_brand}}
         </h6>
+        {% if request.user == s.user.user %}
+        
+        <a class="btn btn-primary btn-sm" href="{{sp.get_product_update_url}}">update</a>
+        <a class="btn btn-danger btn-sm" href="{{sp.get_product_delete_url}}">delete</a>
+        {% endif %}
           </div>
         </div>
         </div>
         
         
         {% endfor %}
-        
-        
-          {% for s in seller_service %}
+        <hr>
+          <center><h4>Services</h4></center>
+          {% for ss in seller_service %}
         
             
           <div class="jumbotron jumbotron-billboard">
@@ -190,20 +196,26 @@
           
         
           
-          {% if s.service_image %}
-          <img src="{{s.service_image.url}}" height="100" width="100">
+          {% if ss.service_image %}
+          <img src="{{ss.service_image.url}}" height="100" width="100">
           {% endif %}
           
           </div>
           <div class="col sm-3">
             
           <h6 >
-          Product Name: {{s.service_name}}
+          service Name: {{ss.service_name}}
           </h6>
           
         <h6>
-          Describe Service : {{s.service_describe}}
+          Describe Service : {{ss.service_describe}}
         </h6>
+        {% if request.user == s.user.user %}
+        
+        <a class="btn btn-primary btn-sm" href="{{ss.get_service_update_url}}">update</a>
+        <a class="btn btn-danger btn-sm" href="{{ss.get_service_delete_url}}">delete</a>
+        {% endif %}
+        
           </div>
         </div>
         </div>

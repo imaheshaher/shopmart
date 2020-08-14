@@ -39,6 +39,15 @@ urlpatterns = [
     re_path(r'profiledetail/\d+/add-product',views.add_product,name='add-product'),
     #add service url
     re_path(r'profiledetail/\d+/add-service',views.add_service,name='add-service'),
+    #update product
+    path("product_update/<pk>",views.product_update,name='product_update'),
+    #delete product_update
+    path("product_delete/<pk>",views.delete_product,name='product_delete'),
+    
+    #update service
+    path("service_update/<pk>",views.service_update,name='product_update'),
+    #delete service
+    path("service_delete/<pk>",views.delete_service,name='product_delete'),
   ]
   
   
